@@ -26,7 +26,7 @@ class TemplateDaemon():
                         ok = True 
 
                     elif run_day == current_day: 
-                        print('DAEMON: already ran today")
+                        print('DAEMON: already ran today')
                     
                     if ok: 
                         run_day = current_day
