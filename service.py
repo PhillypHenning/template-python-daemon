@@ -1,6 +1,6 @@
 # ENTRY POINT TO THE SYSTEM. 
+# Change 'print' to log for more robust logging
 
-# Change 'print' to log for more rebust logging
 import datetime
 import time
 
@@ -13,36 +13,39 @@ class TemplateDaemon():
     def run(self):
         print('DAEMON: starting')
         try:
-
+            run_day = None
             while True:
                 try:
                     # CRITERIA FOR STARTING ADDED HERE
                     # Template case; It's 12:00 UTC
                     ok = False
                     ts = datetime.datetime.utcnow()
+                    current_day = ts.today().strftime('%m%d%Y')
                     c_hour = 4
-                    if ts.hour == c_hour:
+                    if ts.hour == c_hour and run_day != current_day:
                         ok = True 
+
+                    elif run_day == current_day: 
+                        print('DAEMON: already ran today")
                     
-                    print('Current time is: [{}]'.format(ts))
                     if ok: 
+                        run_day = current_day
                         print('DAEMON: beginning work')
                         # ...
                         print('DAEMON: work finished')
-
-                except KeyboardInterrupt:
-                    print('DAEMON: Interrupted')
-                    continue
 
                 except Exception as e:
                     print('DAEMON: An error occured: [{}]'.format(e))
 
                 finally:
                     ok = False
-                    time.sleep(600) # 10 minute sleep timer
+                    time.sleep(10) # 10 minute sleep timer
         
         except Exception as e: 
             print('DAEMON: An error occured: [{}]'.format(e))
+        
+        except KeyboardInterrupt:
+            print('DAEMON: Interrupted')
 
         finally:
             print('DAEMON: stopping')
